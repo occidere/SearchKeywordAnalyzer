@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import json
 
 
 def get_top20_list():
@@ -14,8 +15,6 @@ def search_sections(keyword):
     nv_src = requests.get('https://search.naver.com/search.naver?query=' + keyword, headers=headers).text
     sections = BeautifulSoup(nv_src, "html.parser").find_all("ul", {"class": "type01"})
 
-    print('keyword = ' + keyword)
-
     result = set()
 
     for section in sections:
@@ -25,19 +24,20 @@ def search_sections(keyword):
 
         dt_len = len(dt)
         dd_len = len(dl)
-        size = max(dt_len, dd_len)
 
-        for i in range(0, size):
+        for i in range(0, max(dt_len, dd_len)):
             data = (dt[i] if i < dt_len else '', dd[i] if i < dd_len else '')
             result.add(data)
 
-    return result
+    return {keyword: list(result)}
+
+
+def get_json_result(top20_list):
+    return json.dumps(list(map(lambda kwd: search_sections(kwd), top20_list)))
 
 
 if __name__ == "__main__":
     top20_list = get_top20_list()
     print('top20 : ' + top20_list.__str__())
-    result_list = list(map(lambda kwd: search_sections(kwd), top20_list))
-    for topics in result_list:
-        for topic in topics:
-            print(topic)
+    json_result_list = get_json_result(top20_list)
+    print(json.loads(json_result_list))
