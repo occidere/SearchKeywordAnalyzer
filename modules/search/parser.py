@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-import json
+from datetime import datetime
 
 
 def get_top20_list():
@@ -32,12 +32,6 @@ def search_sections(keyword):
     return {keyword: list(result)}
 
 
-def get_json_result(top20_list):
-    return json.dumps(list(map(lambda kwd: search_sections(kwd), top20_list)))
-
-
-if __name__ == "__main__":
-    top20_list = get_top20_list()
-    print('top20 : ' + top20_list.__str__())
-    json_result_list = get_json_result(top20_list)
-    print(json.loads(json_result_list))
+def get_result(top20_list):
+    yyyyMMddHHmm = datetime.now().strftime("%Y%m%d%H%M")
+    return {yyyyMMddHHmm: list(map(lambda kwd: search_sections(kwd), top20_list))}
