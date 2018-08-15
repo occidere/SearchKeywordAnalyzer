@@ -1,0 +1,8 @@
+{
+  "mongodb": {
+    "url": "mongodb://127.0.0.1:27017",
+    "user": "root",
+    "pwd": "root",
+    "db_name": "schKwdAnz"
+  }
+}
